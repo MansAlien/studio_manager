@@ -1,8 +1,6 @@
 from django.conf import settings
-from django.contrib.auth import user_logged_in, user_logged_out
 from django.contrib.auth.models import User
 from django.db import models
-from django.utils import timezone
 
 
 class JobTitle(models.Model):

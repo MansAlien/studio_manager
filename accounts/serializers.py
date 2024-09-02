@@ -1,11 +1,21 @@
+from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from .models import Country, Governorate, JobTitle
+from .models import (
+    City,
+    Country,
+    Deduction,
+    Governorate,
+    JobTitle,
+    JobTitleHistory,
+    SalaryHistory,
+    UserProfile,
+)
 
 
-class JobTitleSerializer(serializers.ModelSerializer):
+class CitySerializer(serializers.ModelSerializer):
     class Meta:
-        model = JobTitle 
+        model = City
         fields = "__all__"
 
 class CountrySerializer(serializers.ModelSerializer):
@@ -13,7 +23,37 @@ class CountrySerializer(serializers.ModelSerializer):
         model = Country 
         fields = "__all__"
 
+class DeductionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Deduction 
+        fields = "__all__"
+
 class GovernrateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Governorate 
+        fields = "__all__"
+
+class JobTitleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JobTitle 
+        fields = "__all__"
+
+class JobTitleHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JobTitleHistory 
+        fields = "__all__"
+
+class SalaryHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SalaryHistory 
+        fields = "__all__"
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["username", "password"]
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile 
         fields = "__all__"
