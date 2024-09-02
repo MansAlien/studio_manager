@@ -10,14 +10,6 @@ class JobTitleAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_filter = ("id", "name")
     search_fields = ("name",)
 
-
-# class DepartmentAdmin(ImportExportModelAdmin, admin.ModelAdmin):
-#
-#    list_display = ('id', 'name')
-#    list_filter = ('id', 'name')
-#    search_fields = ('name',)
-
-
 class CountryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ("id", "name")
     list_filter = ("id", "name")
@@ -69,13 +61,6 @@ class SalaryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 class DeductionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ("id", "user_profile", "name", "amount")
     list_filter = ("id", "user_profile", "name", "amount")
-
-
-# class DepartmentHistoryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
-
-#    list_display = ('id', 'user_profile', 'start', 'end')
-#    list_filter = ('user_profile', 'start', 'end', 'id')
-
 
 class JobTitleHistoryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ("id", "job_title", "user_profile", "start", "end")
