@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     #Third party apps
     'import_export',
+    'rest_framework',
 
     # my app
     "accounts",
