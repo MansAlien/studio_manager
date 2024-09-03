@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 
 from .models import (
     City,
@@ -27,10 +28,12 @@ from .serializers import (
 class CityViewSet(viewsets.ModelViewSet):
     queryset = City.objects.all()
     serializer_class = CitySerializer
+    permission_classes = [IsAuthenticated]
 
 class CountryViewSet(viewsets.ModelViewSet):
     queryset = Country.objects.all()
     serializer_class = CountrySerializer
+    permission_classes = [IsAuthenticated]
 
 class DeductionViewSet(viewsets.ModelViewSet):
     queryset = Deduction.objects.all()
@@ -39,6 +42,7 @@ class DeductionViewSet(viewsets.ModelViewSet):
 class GovernorateViewSet(viewsets.ModelViewSet):
     queryset = Governorate.objects.all()
     serializer_class = GovernrateSerializer
+    permission_classes = [IsAuthenticated]
 
 class JobTitleViewSet(viewsets.ModelViewSet):
     queryset = JobTitle.objects.all()
