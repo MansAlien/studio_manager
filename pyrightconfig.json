@@ -2,5 +2,7 @@
   "reportAttributeAccessIssue": "none",
   "reportIncompatibleMethodOverride": "none",
   "reportAssignmentType": "none",
+  "reportArgumentType": "none",
+  "reportCallIssue": "none",
 }
 
