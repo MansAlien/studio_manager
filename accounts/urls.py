@@ -1,7 +1,9 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from .views import (
+from accounts import views
+
+from .views_api import (
     CityViewSet,
     CountryViewSet,
     DeductionViewSet,
@@ -25,5 +27,6 @@ router.register(r'user', UserViewSet)
 router.register(r'user_profile', UserProfileViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path("", views.home, name="home"),
+    path('api/accounts/', include(router.urls)),
 ]

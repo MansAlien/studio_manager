@@ -28,7 +28,7 @@ class DeductionSerializer(serializers.ModelSerializer):
         model = Deduction 
         fields = "__all__"
 
-class GovernrateSerializer(serializers.ModelSerializer):
+class GovernorateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Governorate 
         fields = "__all__"
