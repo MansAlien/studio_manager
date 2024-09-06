@@ -1,0 +1,5 @@
+<div id="governorate-{{ governorate.id }}">
+    <h3>{{ governorate.name }}</h3>
+    <button hx-delete="/api/governorates/{{ governorate.id }}/" hx-target="#governorate-{{ governorate.id }}" hx-swap="outerHTML">Delete</button>
+</div>
+
