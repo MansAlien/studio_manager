@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     #Third party apps
     'import_export',
     'rest_framework',
+    'django_admin_generator',
 
     # my app
     "accounts",
