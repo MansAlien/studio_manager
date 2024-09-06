@@ -27,6 +27,5 @@ router.register(r'user', UserViewSet)
 router.register(r'user_profile', UserProfileViewSet)
 
 urlpatterns = [
-    path("", views.home, name="home"),
     path('api/accounts/', include(router.urls)),
 ]
