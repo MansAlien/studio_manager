@@ -1,8 +1,22 @@
-from accounts.models import City, Country, Governorate, JobTitle
+from django.contrib.auth.models import User
+from django.urls import reverse
+from rest_framework.test import APITestCase
+
+from accounts.models import (
+    City,
+    Country,
+    Deduction,
+    Governorate,
+    JobTitle,
+    JobTitleHistory,
+    UserProfile,
+)
 from accounts.serializers import (
     CitySerializer,
     CountrySerializer,
+    DeductionSerializer,
     GovernrateSerializer,
+    JobTitleHistorySerializer,
     JobTitleSerializer,
 )
 
@@ -44,3 +58,13 @@ class JobTitleAPITests(BaseAPITestCase):
         super().setUp()
         self.create_data = {"name": "Test JobTitle"}
         self.update_data = {"name": "Update Test JobTitle"}
+
+class DeductionAPITests(BaseAPITestCase):
+    model = Deduction
+    serializer = DeductionSerializer
+
+    def setUp(self):
+        super().setUp()
+        self.create_data = {"name": "Test Deduction", "amount": 100, "user_profile": self.user.id} 
+        self.update_data = {"name": "Test Deduction", "amount": 100, "user_profile": self.user.id} 
+

@@ -2,7 +2,14 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from rest_framework.test import APITestCase
 
-from accounts.models import City, Country, Governorate, JobTitle
+from accounts.models import (
+    City,
+    Country,
+    Deduction,
+    Governorate,
+    JobTitle,
+    UserProfile,
+)
 
 
 class BaseAPITestCase(APITestCase):
@@ -15,6 +22,8 @@ class BaseAPITestCase(APITestCase):
     #SetUp
     def setUp(self):
         self.user = User.objects.create_user(username="testuser", password="123456")
+        self.user_profile = UserProfile.objects.get(id=self.user.id)
+        self.deduction = Deduction.objects.create(user_profile=self.user_profile, name="Test Deduction", amount=100)
         self.client.login(username="testuser", password="123456")
         self.country = Country.objects.create(name="Test Country")
         self.governorate = Governorate.objects.create(country=self.country, name="Test Governorate")

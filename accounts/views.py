@@ -38,6 +38,7 @@ class CountryViewSet(viewsets.ModelViewSet):
 class DeductionViewSet(viewsets.ModelViewSet):
     queryset = Deduction.objects.all()
     serializer_class = DeductionSerializer
+    permission_classes = [IsAuthenticated]
     
 class GovernorateViewSet(viewsets.ModelViewSet):
     queryset = Governorate.objects.all()
@@ -52,15 +53,19 @@ class JobTitleViewSet(viewsets.ModelViewSet):
 class JobTitleHistoryViewSet(viewsets.ModelViewSet):
     queryset = JobTitleHistory.objects.all()
     serializer_class = JobTitleHistorySerializer
+    permission_classes = [IsAuthenticated]
 
 class SalaryHistoryViewSet(viewsets.ModelViewSet):
     queryset = SalaryHistory.objects.all()
     serializer_class = SalaryHistorySerializer
+    permission_classes = [IsAuthenticated]
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
 
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
+    permission_classes = [IsAuthenticated]
