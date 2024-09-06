@@ -47,6 +47,7 @@ class GovernorateViewSet(viewsets.ModelViewSet):
 class JobTitleViewSet(viewsets.ModelViewSet):
     queryset = JobTitle.objects.all()
     serializer_class = JobTitleSerializer
+    permission_classes = [IsAuthenticated]
     
 class JobTitleHistoryViewSet(viewsets.ModelViewSet):
     queryset = JobTitleHistory.objects.all()
