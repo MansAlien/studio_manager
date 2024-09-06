@@ -16,7 +16,7 @@ from .serializers import (
     CitySerializer,
     CountrySerializer,
     DeductionSerializer,
-    GovernrateSerializer,
+    GovernorateSerializer,
     JobTitleHistorySerializer,
     JobTitleSerializer,
     SalaryHistorySerializer,
@@ -42,7 +42,7 @@ class DeductionViewSet(viewsets.ModelViewSet):
     
 class GovernorateViewSet(viewsets.ModelViewSet):
     queryset = Governorate.objects.all()
-    serializer_class = GovernrateSerializer
+    serializer_class = GovernorateSerializer
     permission_classes = [IsAuthenticated]
 
 class JobTitleViewSet(viewsets.ModelViewSet):
