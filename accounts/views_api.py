@@ -43,6 +43,7 @@ class DeductionViewSet(viewsets.ModelViewSet):
 class GovernorateViewSet(viewsets.ModelViewSet):
     queryset = Governorate.objects.all()
     serializer_class = GovernorateSerializer
+    permission_classes = [IsAuthenticated]
 
 class JobTitleViewSet(viewsets.ModelViewSet):
     queryset = JobTitle.objects.all()
