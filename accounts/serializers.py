@@ -49,9 +49,11 @@ class SalaryHistorySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class UserSerializer(serializers.ModelSerializer):
+    is_active = serializers.BooleanField(default=True)  # Set default value here
+
     class Meta:
         model = User
-        fields = ["username", "password"]
+        fields = ["first_name", "last_name", "email", "username", "password", "is_active", "user_permissions"]
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
