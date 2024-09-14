@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import (
     City,
@@ -12,6 +14,19 @@ from .models import (
     UserProfile,
 )
 
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['username'] = user.username
+        token['first_name'] = user.first_name
+        token['last_name'] = user.last_name
+        token['email'] = user.email
+        
+        permissions = user.user_permissions.values_list('codename', flat=True)
+        token['permissions'] = list(permissions)  # Converting to a list for serialization
+        return token
 
 class CitySerializer(serializers.ModelSerializer):
     class Meta:
@@ -49,8 +64,6 @@ class SalaryHistorySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class UserSerializer(serializers.ModelSerializer):
-    is_active = serializers.BooleanField(default=True)  # Set default value here
-
     class Meta:
         model = User
         fields = ["first_name", "last_name", "email", "username", "password", "is_active", "user_permissions"]
