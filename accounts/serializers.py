@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import (
     City,
@@ -23,6 +22,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['first_name'] = user.first_name
         token['last_name'] = user.last_name
         token['email'] = user.email
+        token['is_superuser'] = user.is_superuser
         
         permissions = user.user_permissions.values_list('codename', flat=True)
         token['permissions'] = list(permissions)  # Converting to a list for serialization
