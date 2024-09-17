@@ -66,7 +66,7 @@ class SalaryHistorySerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["first_name", "last_name", "email", "username", "password", "is_active", "user_permissions"]
+        fields = ["first_name", "last_name", "email", "username", "password", "is_active", "user_permissions", "is_superuser"]
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:

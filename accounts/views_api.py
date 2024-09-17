@@ -92,10 +92,6 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [DjangoModelPermissions]
 
-    def get_queryset(self):
-            check_permission(self.request.user, 'user')
-            return super().get_queryset()
-
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
