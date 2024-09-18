@@ -20,6 +20,7 @@ from .serializers import (
     GovernorateSerializer,
     JobTitleHistorySerializer,
     JobTitleSerializer,
+    LoggedInUserSerializer,
     SalaryHistorySerializer,
     UserProfileSerializer,
     UserSerializer,
@@ -42,6 +43,7 @@ class CityViewSet(viewsets.ModelViewSet):
             return super().get_queryset()
 
 class CountryViewSet(viewsets.ModelViewSet):
+
     queryset = Country.objects.all()
     serializer_class = CountrySerializer
     permission_classes = [IsAuthenticated]
@@ -92,6 +94,10 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [DjangoModelPermissions]
 
+class LoggedInUserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = LoggedInUserSerializer
+
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
@@ -100,3 +106,32 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
             check_permission(self.request.user, 'userprofile')
             return super().get_queryset()
+
+from rest_framework_simplejwt.tokens import RefreshToken
+from .models import LoggedInUser
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        try:
+            # Get the user's LoggedInUser entry
+            user = request.user
+            logged_in_user = LoggedInUser.objects.get(user=user)
+            
+            # Clear the session_key to mark the user as "offline"
+            logged_in_user.session_key = None
+            logged_in_user.save()
+
+            # Blacklist the refresh token if using JWT Blacklist
+            refresh_token = request.data.get("refresh_token")
+            if refresh_token:
+                token = RefreshToken(refresh_token)
+                token.blacklist()
+
+            return Response({"detail": "Successfully logged out."}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)

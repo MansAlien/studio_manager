@@ -1,8 +1,6 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from accounts import views
-
 from .views_api import (
     CityViewSet,
     CountryViewSet,
@@ -10,6 +8,8 @@ from .views_api import (
     GovernorateViewSet,
     JobTitleHistoryViewSet,
     JobTitleViewSet,
+    LoggedInUserViewSet,
+    LogoutView,
     SalaryHistoryViewSet,
     UserProfileViewSet,
     UserViewSet,
@@ -25,7 +25,9 @@ router.register(r'job_title_history', JobTitleHistoryViewSet)
 router.register(r'salary_history', SalaryHistoryViewSet)
 router.register(r'user', UserViewSet)
 router.register(r'user_profile', UserProfileViewSet)
+router.register(r'logged_in_user', LoggedInUserViewSet, basename='logged_in_user')
 
 urlpatterns = [
     path('api/accounts/', include(router.urls)),
+    path('api/logout/', LogoutView.as_view(), name='logout'),
 ]
