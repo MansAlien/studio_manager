@@ -2,6 +2,7 @@ from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
 from .views_api import (
+    BlacklistViewSet,
     CityViewSet,
     CountryViewSet,
     DeductionViewSet,
@@ -26,6 +27,7 @@ router.register(r'salary_history', SalaryHistoryViewSet)
 router.register(r'user', UserViewSet)
 router.register(r'user_profile', UserProfileViewSet)
 router.register(r'logged_in_user', LoggedInUserViewSet, basename='logged_in_user')
+router.register(r'blacklist', BlacklistViewSet)
 
 urlpatterns = [
     path('api/accounts/', include(router.urls)),

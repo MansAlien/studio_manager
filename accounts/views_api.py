@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import (
+    BlacklistedAccessToken,
     City,
     Country,
     Deduction,
@@ -18,6 +19,7 @@ from .models import (
     UserProfile,
 )
 from .serializers import (
+    BlacklistSerializer,
     CitySerializer,
     CountrySerializer,
     DeductionSerializer,
@@ -99,8 +101,12 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [DjangoModelPermissions]
 
 class LoggedInUserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+    queryset = LoggedInUser.objects.all()
     serializer_class = LoggedInUserSerializer
+
+class BlacklistViewSet(viewsets.ModelViewSet):
+    queryset = BlacklistedAccessToken.objects.all()
+    serializer_class = BlacklistSerializer
 
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
@@ -116,20 +122,25 @@ class LogoutView(APIView):
 
     def post(self, request):
         try:
-            # Get the user's LoggedInUser entry
+            # Get the user and their logged-in token
             user = request.user
-            logged_in_user = LoggedInUser.objects.get(user=user)
+            user_rec = User.objects.get(username=user)
+            logged_in_user = LoggedInUser.objects.get(user=user_rec)
+
+            # Blacklist the refresh token to ensure it's not reused
+            refresh_token = request.data.get('refresh_token')
+            if refresh_token:
+                try:
+                    token = RefreshToken(refresh_token)
+                    token.blacklist()  # Blacklist the refresh token
+                except Exception:
+                    return Response({'detail': 'Failed to blacklist the token.'}, status=status.HTTP_400_BAD_REQUEST)
             
-            # Clear the session_key to mark the user as "offline"
-            logged_in_user.session_key = None
+            # Set the user offline and clear the access token in LoggedInUser
+            logged_in_user.access_token = None
+            logged_in_user.is_online = False
             logged_in_user.save()
 
-            # Blacklist the refresh token if using JWT Blacklist
-            refresh_token = request.data.get("refresh_token")
-            if refresh_token:
-                token = RefreshToken(refresh_token)
-                token.blacklist()
-
-            return Response({"detail": "Successfully logged out."}, status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': 'Successfully logged out.'}, status=status.HTTP_200_OK)
+        except LoggedInUser.DoesNotExist:
+            return Response({'detail': 'User not found.'}, status=status.HTTP_400_BAD_REQUEST)

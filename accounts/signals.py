@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib.auth import user_logged_in, user_logged_out
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save, pre_save
@@ -131,12 +130,11 @@ def update_first_salary_history(sender, instance, **kwargs):
                 first_salary_history.start = instance.start  # Update the start time
                 first_salary_history.save()
 
-
 @receiver(user_logged_in)
 def on_user_logged_in(sender, request, **kwargs):
-    LoggedInUser.objects.get_or_create(user=kwargs.get("user"))
+    LoggedInUser.objects.get_or_create(user=kwargs.get('user')) 
 
 
 @receiver(user_logged_out)
 def on_user_logged_out(sender, **kwargs):
-    LoggedInUser.objects.filter(user=kwargs.get("user")).delete()
+    LoggedInUser.objects.filter(user=kwargs.get('user')).delete()

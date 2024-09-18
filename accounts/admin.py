@@ -58,7 +58,7 @@ class SalaryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_filter = ("id", "user_profile", "amount", "start", "end")
 
 class LoggedInAdmin(ImportExportModelAdmin, admin.ModelAdmin):
-    list_display = ("id", "user", "session_key")
+    list_display = ("user", "is_online", "access_token")
 
 
 class DeductionAdmin(ImportExportModelAdmin, admin.ModelAdmin):

@@ -80,13 +80,14 @@ class Deduction(models.Model):
     def __str__(self):
         return self.name
 
-
 class LoggedInUser(models.Model):
-    user = models.OneToOneField(
-        User, related_name="logged_in_user", on_delete=models.CASCADE
-    )
-    session_key = models.CharField(max_length=32, null=True, blank=True)
+    user = models.OneToOneField(User, related_name="logged_in_user", on_delete=models.CASCADE)
+    access_token = models.CharField(max_length=512, null=True, blank=True)  # Store the JWT access token here
+    is_online = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username
 
+class BlacklistedAccessToken(models.Model):
+    token = models.TextField(unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)

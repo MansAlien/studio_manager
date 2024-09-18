@@ -1,8 +1,9 @@
 from django.contrib.auth.models import User
-from rest_framework import serializers
+from rest_framework_simplejwt import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from .models import (
+    BlacklistedAccessToken,
     City,
     Country,
     Deduction,
@@ -19,41 +20,45 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-
-        # Add custom claims to the token
         token['username'] = user.username
         token['user_id'] = user.id
         token['first_name'] = user.first_name
         token['last_name'] = user.last_name
         token['email'] = user.email
         token['is_superuser'] = user.is_superuser
-
-        # Get user permissions
         permissions = user.user_permissions.values_list('codename', flat=True)
         token['permissions'] = list(permissions)  # Converting to a list for serialization
 
-        # Update the LoggedInUser model to reflect that the user is "online"
-        logged_in_user, created = LoggedInUser.objects.get_or_create(user=user)
-        
-        # Store the token's unique ID (jti) as the session_key to mark the user as online
-        logged_in_user.session_key = token['jti']
-        logged_in_user.save()
-
         return token
 
-class LoggedInUserSerializer(serializers.ModelSerializer):
-    is_online = serializers.SerializerMethodField()
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        user = self.user
+        user_rec = User.objects.get(username=user)
+        logged_in_user= LoggedInUser.objects.get(user=user_rec)
+        user_rec = logged_in_user.user
+        
+        # If the user already has an access token, blacklist the old token
+        if logged_in_user.access_token:
+            try:
+                old_token = logged_in_user.access_token
+                BlacklistedAccessToken.objects.create(token=old_token)
+                print(f"Blacklisted old token for user {user_rec.username}")
 
+            except Exception as e:
+                print(f"Error blacklisting token: {e}")
+
+        # Store the new access token in LoggedInUser
+        logged_in_user.access_token = data['access']
+        logged_in_user.is_online = True
+        logged_in_user.save()
+
+        return data
+
+class LoggedInUserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ['username', 'is_online']
-    def get_is_online(self, obj):
-        try:
-            # Check if the user has a valid session_key in LoggedInUser model
-            logged_in_user = LoggedInUser.objects.get(user=obj)
-            return logged_in_user.session_key is not None
-        except LoggedInUser.DoesNotExist:
-            return False
+        model = LoggedInUser
+        fields = "__all__"
 
 class CitySerializer(serializers.ModelSerializer):
     class Meta:
@@ -99,3 +104,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile 
         fields = "__all__"
+
+class BlacklistSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BlacklistedAccessToken 
+        fields = ["token"]
