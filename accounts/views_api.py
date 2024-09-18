@@ -1,7 +1,10 @@
 from django.contrib.auth.models import User
-from rest_framework import viewsets
+from rest_framework import status, viewsets
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import (
     City,
@@ -10,6 +13,7 @@ from .models import (
     Governorate,
     JobTitle,
     JobTitleHistory,
+    LoggedInUser,
     SalaryHistory,
     UserProfile,
 )
@@ -106,12 +110,6 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
             check_permission(self.request.user, 'userprofile')
             return super().get_queryset()
-
-from rest_framework_simplejwt.tokens import RefreshToken
-from .models import LoggedInUser
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
 
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
