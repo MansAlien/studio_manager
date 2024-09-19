@@ -35,7 +35,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         data = super().validate(attrs)
         user = self.user
         user_rec = User.objects.get(username=user)
-        logged_in_user= LoggedInUser.objects.get(user=user_rec)
+        logged_in_user, created= LoggedInUser.objects.get_or_create(user=user_rec)
         user_rec = logged_in_user.user
         
         # If the user already has an access token, blacklist the old token
