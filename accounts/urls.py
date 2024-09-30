@@ -6,6 +6,7 @@ from .views_api import (
     CityViewSet,
     CountryViewSet,
     DeductionViewSet,
+    EmployeeDataAPIView,
     GovernorateViewSet,
     JobTitleHistoryViewSet,
     JobTitleViewSet,
@@ -31,5 +32,6 @@ router.register(r'blacklist', BlacklistViewSet)
 
 urlpatterns = [
     path('api/accounts/', include(router.urls)),
+    path('api/accounts/employee-data/', EmployeeDataAPIView.as_view(), name='employee-data'),
     path('api/logout/', LogoutView.as_view(), name='logout'),
 ]

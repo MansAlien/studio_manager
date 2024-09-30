@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
-from rest_framework import status, viewsets
+from rest_framework import generics, status, viewsets
+from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
 from rest_framework.response import Response
@@ -23,6 +24,7 @@ from .serializers import (
     CitySerializer,
     CountrySerializer,
     DeductionSerializer,
+    EmployeeDataSerializer,
     GovernorateSerializer,
     JobTitleHistorySerializer,
     JobTitleSerializer,
@@ -111,11 +113,25 @@ class BlacklistViewSet(viewsets.ModelViewSet):
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [DjangoModelPermissions]
 
-    def get_queryset(self):
-            check_permission(self.request.user, 'userprofile')
-            return super().get_queryset()
+    # Custom action to get the last user profile
+    @action(detail=False, methods=['get'], url_path='last_profile', permission_classes=[DjangoModelPermissions])
+    def last_user_profile(self, request):
+        # Fetch the last created user profile
+        last_profile = UserProfile.objects.order_by('-id').first()
+        
+        # Check if there is a profile available
+        if last_profile:
+            serializer = self.get_serializer(last_profile)
+            return Response(serializer.data)
+        else:
+            return Response({'detail': 'No profiles found.'}, status=404)
+
+class EmployeeDataAPIView(generics.ListAPIView):
+    queryset = UserProfile.objects.all()
+    serializer_class = EmployeeDataSerializer
+    permission_classes = [IsAuthenticated]
 
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
