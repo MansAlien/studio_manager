@@ -38,7 +38,6 @@ class UserProfile(models.Model):
     }
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     job_title = models.ForeignKey(JobTitle, on_delete=models.SET_NULL, null=True)
-    # department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True)
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True)
     date_of_birth = models.DateField(null=True)
     start = models.DateField(null=True)
